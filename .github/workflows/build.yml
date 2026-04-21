@@ -32,7 +32,6 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Update maven version
-        if: startsWith(github.ref, 'refs/tags/')
         run: mvn versions:set -DnewVersion=${{ github.ref_name }} && mvn versions:commit
 
       - name: Build with Maven
