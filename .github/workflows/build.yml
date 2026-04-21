@@ -37,24 +37,9 @@ jobs:
       - name: Build with Maven
         run: mvn -B clean org.jacoco:jacoco-maven-plugin:prepare-agent verify  -P coverage-per-test
   
-      - name: Create Release candidate
-        id: create_release_candidate
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      - name: Upload plugin jar
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          draft: true
-          prerelease: ${{contains(github.ref,'-RC')}}
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release_candidate.outputs.upload_url }}
-          asset_path: ./esql-plugin/target/esql-plugin-${{ github.ref_name }}.jar
-          asset_name: esql-plugin-${{ github.ref_name }}.jar
-          asset_content_type: application/java-archive
+          name: esql-plugin-${{ github.ref_name }}
+          path: ./esql-plugin/target/esql-plugin-*.jar
       
